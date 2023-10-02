@@ -2,8 +2,10 @@ import numpy as np
 from collections import Counter
 import hccpy.utils_hhs as utils
 import hccpy._AGESEXV6 as AGESEXV6 # age/sex variables
-import hccpy._I0V05ED2 as I0V05ED2 # age/sex edits
-import hccpy._V0519F3M as V0519F3M # interactions
+import hccpy._I0V05ED2 as I0V05ED2 # v05 2019 age/sex edits
+import hccpy._I0V07ED1 as I0V07ED1 # v07 2022 age/sex edits
+import hccpy._V0519F3M as V0519F3M # v05 2019 interactions
+import hccpy._CY22M07C as CY22M07C # v07 2022 interactions
 import hccpy._V0519F3P as V0519F3P # risk coefn 
 
 class HHSHCCEngine:
@@ -36,6 +38,13 @@ class HHSHCCEngine:
         self.label = utils.read_label(fnmaps[myear]["label"])
         self.hier = utils.read_hier(fnmaps[myear]["hier"])
 
+        if myear==2019:
+            self.interactions = V0519F3M
+            self.agesexedits = I0V05ED2
+        else:
+            self.interactions = CY22M07C
+            self.agesexedits = I0V07ED1
+
     def _apply_hierarchy(self, cc_dct, age, sex):
         """Returns a list of HCCs after applying hierarchy and age/sex edit
         """
@@ -51,7 +60,7 @@ class HHSHCCEngine:
     def _apply_interactions(self, cc_lst, agegroup, age):
         """Returns a list of HCCs after applying interactions.
         """
-        cc_lst = V0519F3M.create_interactions(cc_lst, agegroup, age)
+        cc_lst = interactions.create_interactions(cc_lst, agegroup, age)
         return cc_lst
 
     def _sexmap(self, sex):
@@ -100,7 +109,7 @@ class HHSHCCEngine:
         cc_dct.update({pr:self.hcpcs2rxc[pr] for pr in pr_lst
                         if pr in self.hcpcs2rxc})
 
-        cc_dct = I0V05ED2.apply_agesex_edits(cc_dct, age, sex)
+        cc_dct = agesexedits.apply_agesex_edits(cc_dct, age, sex)
         hcc_lst_0 = self._apply_hierarchy(cc_dct, age, sex)
         hcc_lst = self._apply_interactions(hcc_lst_0, agegroup, age)
         risk_dct = V0519F3P.get_risk_dct(self.coefn, hcc_lst, 
