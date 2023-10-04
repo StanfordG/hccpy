@@ -128,7 +128,7 @@ def _child(cc_lst):
             "G07A": ["HHS_HCC070", "HHS_HCC071"],
             "G08": ["HHS_HCC073", "HHS_HCC074"],
             "G09A": ["HHS_HCC081", "HHS_HCC082"],
-            "G09C": ["HHS_HCC083", "HHS_HCC084"]
+            "G09C": ["HHS_HCC083", "HHS_HCC084"],
             "G10": ["HHS_HCC106", "HHS_HCC107"],
             "G11": ["HHS_HCC108", "HHS_HCC109"],
             "G12": ["HHS_HCC117", "HHS_HCC119"],
