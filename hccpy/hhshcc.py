@@ -60,7 +60,7 @@ class HHSHCCEngine:
     def _apply_interactions(self, cc_lst, agegroup, age):
         """Returns a list of HCCs after applying interactions.
         """
-        cc_lst = interactions.create_interactions(cc_lst, agegroup, age)
+        cc_lst = self.interactions.create_interactions(cc_lst, agegroup, age)
         return cc_lst
 
     def _sexmap(self, sex):
@@ -109,7 +109,7 @@ class HHSHCCEngine:
         cc_dct.update({pr:self.hcpcs2rxc[pr] for pr in pr_lst
                         if pr in self.hcpcs2rxc})
 
-        cc_dct = agesexedits.apply_agesex_edits(cc_dct, age, sex)
+        cc_dct = self.agesexedits.apply_agesex_edits(cc_dct, age, sex)
         hcc_lst_0 = self._apply_hierarchy(cc_dct, age, sex)
         hcc_lst = self._apply_interactions(hcc_lst_0, agegroup, age)
         risk_dct = V0519F3P.get_risk_dct(self.coefn, hcc_lst, 
